@@ -1,11 +1,13 @@
 using BlockedCountriesApi.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
-builder.Services.AddSingleton<CountryBlockService>();
+// Services
+builder.Services.AddScoped<CountryBlockService>();
 builder.Services.AddScoped<TemporalBlockService>();
+
 builder.Services.AddHttpClient<IGeoLocationService, GeoLocationService>();
-builder.Services.AddScoped<GeoLocationService>();
+
 builder.Services.AddHostedService<TemporalBlockCleanupService>();
 
 builder.Services.AddControllers();
@@ -14,7 +16,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure Swagger
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -22,8 +24,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
 
-// Map controllers
 app.MapControllers();
 
 app.Run();
